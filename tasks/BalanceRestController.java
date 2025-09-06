@@ -1,21 +1,22 @@
 package com.jpmc.midascore.component;
 
 import com.jpmc.midascore.foundation.Balance;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 public class BalanceRestController {
-    private final DatabaseConduit databaseConduit;
 
-    public BalanceRestController(DatabaseConduit databaseConduit) {
-        this.databaseConduit = databaseConduit;
+    private DatabaseConduit conduit;
+
+    public BalanceRestController(DatabaseConduit conduit) {
+        this.conduit = conduit;
     }
 
-    @GetMapping(value = "/balance")
-    public Balance queryBalance(@RequestParam("userId") Long userId) {
-        float balance = databaseConduit.queryUserBalance(userId);
-        return new Balance(balance);
+    @GetMapping("/balance")
+    public Balance getUserBalance(@RequestParam("userId") Long userId) {
+        float amount = conduit.queryUserBalance(userId);
+        return new Balance(amount);
     }
 }
