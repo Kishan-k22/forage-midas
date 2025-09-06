@@ -9,15 +9,17 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 public class IncentiveQuerier {
-    private final RestTemplate restTemplate;
-    private final String incentiveApiUrl;
 
-    public IncentiveQuerier(RestTemplateBuilder builder, @Value("${general.incentive-api-url}") String incentiveApiUrl) {
-        this.restTemplate = builder.build();
-        this.incentiveApiUrl = incentiveApiUrl;
+    private final RestTemplate client;
+    private final String apiUrl;
+
+    public IncentiveQuerier(RestTemplateBuilder restTemplateBuilder,
+                            @Value("${general.incentive-api-url}") String apiUrl) {
+        this.client = restTemplateBuilder.build();
+        this.apiUrl = apiUrl;
     }
 
-    public Incentive query(Transaction transaction) {
-        return restTemplate.postForObject(incentiveApiUrl, transaction, Incentive.class);
+    public Incentive fetch(Transaction tx) {
+        return client.postForObject(apiUrl, tx, Incentive.class);
     }
 }
